@@ -1,6 +1,6 @@
 # General-Notes
 This is the place to keep all my notes
-In this ```README.md``` file you can get a quick overview of all the notes that I made<br> so its basically constantly updated whenever new notes are added to the repository.
+In this `README.md` file you can get a quick overview of all the notes that I made<br> so its basically constantly updated whenever new notes are added to the repository.
 
 ---
 
