@@ -57,16 +57,16 @@ export default MyComponent;
 ### Passing values between components 
 
 we can pass values between components by using the `props`. With props we can pass any value, object or array into another component and use it inside that component. Passing a `prop` into another component can be done like this:
-`jsx
+```jsx
 // Note That my component, PropName and PropValue can all be custom names like: Banana or Spaceship.
 <MyComponent PropName={PropValue}/>
-`
+```
 > NOTE: make sure your naming convention does make sense for both you and others who might want to understand your code.
 
 You now need a parameter inside your component like this:
-`jsx
+```jsx
 function MyComponent({PropName}) {}
-`
+```
 Then we can use this value or object inside our component
 
 ### Destructuring arrays (or arrays of objects)
@@ -79,12 +79,12 @@ Lastly you want to make sure that your wrapping `div` has a unique `key` associa
 ```jsx
 return (
     <>
-        {blogs.map((blog, index) => {
+        {Props.map((prop, index) => {
             return (
                 <div key={index}>
-                    <div key={blog.id}>
-                        <span>{blog.name}</span><br/>
-                        <span>{blog.content}</span>
+                    <div key={prop.id}>
+                        <span>{prop.name}</span><br/>
+                        <span>{prop.content}</span>
                     </div>
                 </div>
             );
@@ -100,9 +100,9 @@ If you want to make sure you're running a stable versipon and not the latest spe
 > You can check if you installed your module correctly by checking the `package.json` file 
 
 If you want to use the library you need to fisrt import the components you need:
-`jsx
+```jsx
     import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-`
+```
 Most of the cases you want your route to be in your `app.js` file. You might also want a navbar most of the time. This is how you make your routes:
 ```jsx
 <BrowserRouter>
@@ -110,8 +110,8 @@ Most of the cases you want your route to be in your `app.js` file. You might als
     <div className="content"> 
     {/* You dont need this div but it comes if you wanna add other components then is nice to have your routes in a seperate div */}
         <Routes>
-        <Route path='/' element={<Main />}/>
-        <Route path='/blogs' element={<BlogList />}/>
+            <Route path='/' element={<MyComponent />}/>
+            <Route path='/secondComponent' element={<MyComponetTwo />}/>
         </Routes> 
     </div>
     </div>
@@ -127,10 +127,9 @@ Now that we set up our routing its time to make Links that actually use these ro
 We can do that by using our navbar and adding links to them.
 ```jsx
 <div className="navbar">
-    <Link to={'/home'}><button>Home</button></Link>
-    <Link to={'/blogs'}><button>Blogs</button></Link>
-    <Link to={'/add'}><button>Add blog</button></Link>
-    <Link to={'/about'}><button>About</button></Link>
+    <Link to={'/'}><button>Home</button></Link>
+    <Link to={'/secondComponent'}><button>Second Component</button></Link>
+    <Link to={'/otherComponent'}><button>Other Component</button></Link>
 </div>
 ```
 
@@ -140,11 +139,131 @@ Inside the `Link` we define the connection to one of the routes we set up. We ca
 Its also possible to wrap a link around a whole `div` so you can make whole components clickable.
 
 ```jsx
-<Link to={'/blogs'}> {/* Link tag that wraps around a div */}
+<Link to={'/SecondComponent'}> {/* Link tag that wraps around a div */}
     <div>
         <span>example</span>
         <button>button</button>
     </div>
 </Link>
 ```
+
+### Using JSON files as our database
+
+If we want to effectively work with a lot of data inside our react app we need a place to `store` that data, aswell as `delete`, `get` and `update` it.
+For this we need a database a seperate place for all our data. We can do this in many ways but one were going to use now is to use json files to store our data.
+
+#### Setting up a JSON server
+
+First we need to make a seperate folder inside our react folder which we would call `data` but you can call it whatever you want.
+Then we need to make a `.json` file inside that `data` folder. Were going to call it `db.json` which stands for `database`.
+
+Next up, you want to set up a json server using this command: `npx json-server --watch data/db.json --port 8000`
+
+The `--watch` command is used to tell the json server which file to watch so make sure you got the path to your json file right, in this case it will be `data/db.json`
+The `--port` command is used to tell the json server which port to run on, this can be any port you like, The default would be port `3000` but since that port is already been used to run our react server we have to specify a different port. in this case we're using port `8000`.
+
+> If you haven't installed all the packages for json-server yet it will ask you to install them, the only thing you have to do is type `y` and then `enter`
+
+After everything has been installed the server will run and you're presented with 1 or 2 links: `Home` and `Resources`.
+Your `Home` is just the front page of your json server and shows no data. This is where you land when you have no data inside your json file yet.
+Your `Resources` is the place where all your data is stored, the name in the url is the name of one of your sets of data.
+
+#### JSON data structuring
+Now that we have got our json server set up, lets add some data to our json file. The first step is to define a `JSON element` we can do that by simply adding `{}` inside here we can define basically enything we want like: `objects`, `arrays`, `strings`, `numbers`, `booleans` and even `null`.
+for this example we want to store and array of objects. So the first thing we have define is the `name` of the array, lets say for example: "MyArray" and then we add `[]` to define an array inside our JSON element. the result will look something like this:
+
+```json
+{ 
+    "MyArray": []
+}
+```
+Now we want this array to store multiple objects. so we need to define an object by using `{}`. Each object in our array is going to have properties for example an `id` and a `name`. we can define propeties inside an object by first writing the `name` of that property and then a `value` like this: `"id": 2` or `"name": "Jack"`.
+If you want to assign multiple properties to an objects then you have to use a `,` at the end of each property you define. 
+Your JSON file will now look something like this:
+
+```json
+{ 
+    "MyArray": [
+        {  
+            "Name": "Jack",  
+            "id": 1
+        }
+    ]
+}
+```
+Now we have an array with one object in it. but maybe we want to have multiple object inside the array each with their own name and id.
+We can easily do that by adding a `,` at the end of each object and then just add another object the same we did with the first object.
+
+```json
+{ 
+    "MyArray": [ 
+        {  
+            "Name": "Jack",  
+            "id": 1
+        },
+        
+        { 
+            "Name": "Tom", 
+            "id": 2
+        }
+    ]
+}
+```
+And we can basically keep doing this forever. Just adding more and more objects to that array.
+Now you can also do this with the array, Adding multiple arrays with different data in it.
+
+```json
+{ 
+    "MyArray": [ 
+        { 
+            "Name": "Jack",  
+            "id": 1
+        },
+        
+        { 
+            "Name": "Tom", 
+            "id": 2
+        }
+    ],
+
+    "MySecondArray": [ 
+        { 
+            "apples": true,  
+            "id": 1
+        },
+        
+        { 
+            "apples": false,
+            "id": 2
+        }
+    ]   
+}
+```
+To learn more about json check out the [official docs](https://www.json.org/json-en.html)
+
+#### Getting the data from the JSON file
+Back into our react app we can get the data basically anywhere we want to. To get the data we want we have to make a `get` request to the server.
+We can make a request by using the `fetch()` function. Inside that fetch function we put the address to our server along with the data we want to retrieve `http://localhost:8000/myArray`. then we want to add 2 a `.then` function with one of them being for the response of the server and the other the actual data we request.
+
+```jsx
+
+const [data, setdata] = useState(null);
+
+fetch("http://localhost:8000/myArray")
+    .then(res =>  {
+        return res.json();
+    })
+    .then(data => {
+        setData(data);
+    }) 
+```
+The first `.then` is responsible to wait for a repsonse from the json server, once there is a response it will return the json from that server.
+The second `.then` is responsible for actually getting the data and then we can decide what do do with it. so in this case we will set a `useState()` hook with it that we define on the top. More on `useState()` hooks can be found here: [Using the State Hook](https://reactjs.org/docs/hooks-state.html)
+
+
+
+
+
+
+
 
