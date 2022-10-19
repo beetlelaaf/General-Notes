@@ -6,6 +6,29 @@
 
 ---
 
+### Table of contents
+- 1 [Setting up a project](#setup)
+  - 1.1 [Tips and Shortcuts](#tips)
+  - 1.2 [Passing values between components](#value-passing)
+  - 1.3 [Destructuring arrays](#destructure)
+- 2 [Routing in react.js](#routing)
+  - 2.1 [Adding links to your routing](#linking)
+- 3 [Using JSON files as your database](#json)
+  - 3.1 [Setting up a json server](#json-server)
+  - 3.2 [JSON data structuring](#json-data)
+  - 3.3 [Getting the data from the JSON file](#json-fetch)
+- 4 [Working with data](#data)
+  - 4.1 [Error Handling](#error)
+  - 4.2 [Pending Data](#pending)
+  - 4.3 [Making a form](#form)
+  - 4.4 [Submitting data](#post)
+  - 4.5 [Retrieving specific data](#specific)
+  - 4.6 [Renaming data](#rename)
+- 5 [Custom Hooks](#hooks)
+---
+
+<div id="setup"></div>
+
 ### Setting up a project
 Installing node is one of the first steps in the process of creating your react app so make sure you got that intsalled. You can check if you got node installed by simply checking its version with: `Node -v`.
 
@@ -30,6 +53,7 @@ Run written tests inside your app.
 
 **Note:** If everything is installed dont forget to put `node_modules` and `package-lock.json` into the `.gitgnore` file. otherwise you would have over 10k unstaged changes from the `node_module` that you dont need to push anyway.
 
+<div id="tips"></div>
 
 ### Tips when using react.js
 
@@ -53,6 +77,7 @@ function MyComponent() {
 
 export default MyComponent;
 ```
+<div id="value-passing"></div>
 
 ### Passing values between components 
 
@@ -68,6 +93,8 @@ You now need a parameter inside your component like this:
 function MyComponent({PropName}) {}
 ```
 Then we can use this value or object inside our component
+
+<div id="destructure"></div>
 
 ### Destructuring arrays (or arrays of objects)
 
@@ -93,7 +120,9 @@ return (
 );
 ```
 
-### Routing in react.js
+<div id="routing"></div>
+
+### Routing in react.js 
 
 To start routing in react you need make use of the `react-router-dom` this module can be installed by running the command: `npm install react-router-dom`
 If you want to make sure you're running a stable versipon and not the latest specify the version at the end like this: `npm install react-router-dom@5`
@@ -121,6 +150,8 @@ The `<BrowserRouter>` Will be your main frame for routing. In here you will be a
 The `<Routs>` Will be the tag that will contain all your individual routes.
 The `<Route>` component will be responsible for setting the `path` and the `element` (component) it needs to render once this path is called.
 
+<div id="linking"></div>
+
 #### Adding links to your routing.
 
 Now that we set up our routing its time to make Links that actually use these route.
@@ -146,11 +177,14 @@ Its also possible to wrap a link around a whole `div` so you can make whole comp
     </div>
 </Link>
 ```
+<div id="json"></div>
 
 ### Using JSON files as our database
 
 If we want to effectively work with a lot of data inside our react app we need a place to `store` that data, aswell as `delete`, `get` and `update` it.
 For this we need a database a seperate place for all our data. We can do this in many ways but one were going to use now is to use json files to store our data.
+
+<div id="json-server"></div>
 
 #### Setting up a JSON server
 
@@ -167,6 +201,8 @@ The `--port` command is used to tell the json server which port to run on, this 
 After everything has been installed the server will run and you're presented with 1 or 2 links: `Home` and `Resources`.
 Your `Home` is just the front page of your json server and shows no data. This is where you land when you have no data inside your json file yet.
 Your `Resources` is the place where all your data is stored, the name in the url is the name of one of your sets of data.
+
+<div id="json-data"></div>
 
 #### JSON data structuring
 Now that we have got our json server set up, lets add some data to our json file. The first step is to define a `JSON element` we can do that by simply adding `{}` inside here we can define basically enything we want like: `objects`, `arrays`, `strings`, `numbers`, `booleans` and even `null`.
@@ -241,6 +277,8 @@ Now you can also do this with the array, Adding multiple arrays with different d
 ```
 To learn more about json check out the [official docs](https://www.json.org/json-en.html)
 
+<div id="json-fetch"></div>
+
 #### Getting the data from the JSON file
 Back into our react app we can get the data basically anywhere we want to. To get the data we want we have to make a `get` request to the server.
 We can make a request by using the `fetch()` function. Inside that fetch function we put the address to our server along with the data we want to retrieve `http://localhost:8000/myArray`. then we want to add 2 a `.then` function with one of them being for the response of the server and the other the actual data we request.
@@ -260,10 +298,163 @@ fetch("http://localhost:8000/myArray")
 The first `.then` is responsible to wait for a repsonse from the json server, once there is a response it will return the json from that server.
 The second `.then` is responsible for actually getting the data and then we can decide what do do with it. so in this case we will set a `useState()` hook with it that we define on the top. More on `useState()` hooks can be found here: [Using the State Hook](https://reactjs.org/docs/hooks-state.html)
 
+<div id="data"></div>
 
+### Working with data 
+Now that we have set up a way to get data, We need some form of error handling that can tell us if something is wrong. We also need to know whether data is actually being loaded or not, So we need to tell the user whats going on. Eventually we also want to store data inside the database.
 
+<div id="error"></div>
 
+#### Error Handling
+We can add error hadnling bay simply adding a `.catch` function at the bottom of out `fetch` function, and then logging that error to the console.
+```jsx
+fetch("http://localhost:8000/myArray")
+    .then(res =>  {
+        return res.json();
+    })
+    .then(data => {
+        setData(data);
+    }) 
+    .catch(err => {
+        console.log(err);
+    })
+```
+If we want to let the user know that an error had occured we need to show some text telling what the error. We can do that by setting a variable with the catched error. Next we need to use that variable to display an error to the screen. We display the error message based on if its set or not.
 
+```jsx
+const [error, setError] = useState(null);
 
+    .catch(err => {
+        setError(err.message); // were setting the variable to be the message of the error since the catch function returns an object.
+    })
+```
+```jsx
 
+{ error && // Inside our render component we check if the variable error is set and if that is true then we display the html inside.
+    <div>
+        <span>{error}</span>
+    </div>
+}
+```
+
+<div id="pending"></div>
+
+#### Pending Data
+If the server needs to bring a lot of data from somewhere or the connection to the server is slow, loading data is going to take some time.
+we need a way to tell the user that data is loading instead of letting them stare at an empty screen. We can do that by making another variable just like the error variable and setting that variable to `false`. then we want to set that variable to `true` whenever were fetching data, and then back to `false` whenever were done fetching out data. 
+
+```jsx
+const [isPending, setIsPending] = useState(false); // The default value of this variable is false since were not fetching any data yet.
+
+fetch("http://localhost:8000/myArray")
+    isPending(true); // Whenever the fetch method is called we set the pending to true
+    .then(res =>  {
+        return res.json();
+    })
+    .then(data => {
+        setData(data);
+        setIsPending(false); // Whenever we're done fetching, we can set this variable back to false.
+    }) 
+    .catch(err => {
+        setError(err.message);
+        setIsPending(false); // Also if we experience an error we need to set this variable to false since were not fetching anymore.
+    })
+```
+We can then use the state of that variable to display a message just like the error message.
+```jsx
+{isPending && //Check if isPending is true.
+    <div>
+        <span>Loading data...</span>
+    </div>
+}
+```
+> If you want to replicate the effect of data that is loading put your fetch method inside a `timeout` function and set isPending to true before that.
+
+<div id="form"></div>
+
+####  Making a form 
+To store user data inside out database we need to make a post request to the database. but first we need to make a form where the user can fill in the necessary data.
+
+we'll start by making a `form` that will have an `onSubmit()` function that will trigger the `handleSubmit` function we later define ourselves. then we'll define 2 `input` and one `textarea` which we will give a `placeholder` so we dont need labels. We will aslo make our inputs `required` so we dont have empty data. We will set a `value` to be variable we will also define ourselves and we'll use to get the value of the input. lastly we will give each input an `onChange` property which will be an arrow function calling the corresponding `state` variable. The variable will be set with the `value` of the `event` `target`, which in this case is the `input` itself.
+
+At the bottom we'll add a button. This button will show only if there is no fetch call. If there is a fetch call pending will be true and a loading messages is shown.
+
+```jsx
+<form onSubmit={handleSubmit}>               
+    <input 
+    type="text"  
+    placeholder="Title"
+    required
+    value={title}
+    onChange={(e) => setTitle(e.target.value)}
+    ></input> 
+
+    <input 
+    type="text" 
+    placeholder="Author"
+    required
+    onChange={(e) => setAuthor(e.target.value)}
+    ></input>  
+
+    <textarea  
+    rows="10" 
+    placeholder="Start writing your blog here..."
+    required
+    onChange={(e) => setBody(e.target.value)}
+    ></textarea>
+
+    {!isPending && // If there is nothing fetching show a submit button
+        <button type="submit">Add Blog</button> 
+    }
+
+    {isPending && // If there already is something fetching show a loading message.
+        <span>Loading...</span> 
+    }
+</form>
+```
+
+<div id="post"></div>
+
+#### Submitting data
+No that we got our form setup we only need to send the data to the database and tell it to store that data. Let's first set up our state variables that we specified in the form.
+```jsx
+    const [title, setTitle] = useState(''); 
+    const [author, setAuthor] = useState('');
+    const [body, setBody] = useState('');
+    const [isPending, setIsPending] = useState(false); 
+    // note how we also need another pending variable to determine to change our button to a loading message.
+```
+Next, we'll define our `handleSubmit()` function. inside this function we want to make a call 
+
+```jsx
+    function handleSubmit(e) {
+        e.preventDefault();                     // Prevent the event from performing its default procedure.
+        const blog = {title, author, body}      // Make an object that will include the 3 user inputs (can also be an array)
+
+        setIsPending(true);                     // Set pending to true as were about to send out data to the database
+        fetch('http://localhost:8000/blogs', {  // Make a fetch call to the database
+            method: 'POST',                     // Here were telling the database that we want to POST data (Send data)
+            headers: {"Content-Type": "application/json"}, // Here were defining its about JSON data.
+            body: JSON.stringify(blog)          // We send the actual data in JSON format.
+        }).then(() => {
+            console.log('new blog added');      // This is optional but this way you can check if the process was successful. 
+        } )
+        setIsPending(false);                    // Set pending back to false as the process has been fully completed.   
+    }
+```
+
+<div id="specific"></div>
+
+#### Retrieving specific data
+coming soon...
+
+<div id="rename"></div>
+
+#### Renaming data
+coming soon...
+
+<div id="hooks"></div>
+
+### Custom hooks 
+coming soon...
 
