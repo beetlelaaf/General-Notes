@@ -23,8 +23,8 @@
   - 4.3 [Making a form](#form)
   - 4.4 [Submitting data](#post)
   - 4.5 [Retrieving specific data](#specific)
-  - 4.6 [Renaming data](#rename)
 - 5 [Custom Hooks](#hooks)
+  - 5.1 [Renaming data](#rename)
 ---
 
 <div id="setup"></div>
@@ -51,7 +51,7 @@ Run written tests inside your app.
 
 `npm run eject`
 
-**Note:** If everything is installed dont forget to put `node_modules` and `package-lock.json` into the `.gitgnore` file. otherwise you would have over 10k unstaged changes from the `node_module` that you dont need to push anyway.
+**Note:** If everything is installed make sure the `node_modules` folder is referenced in your the `.gitgnore` file. otherwise you would have over 10k unstaged changes from the `node_module` that you dont need to push anyway.
 
 <div id="tips"></div>
 
@@ -446,15 +446,70 @@ Next, we'll define our `handleSubmit()` function. inside this function we want t
 <div id="specific"></div>
 
 #### Retrieving specific data
-coming soon...
+Whenever we want to get only one specific object from a list of object we need send a get request with a specific `id` this can be done by including that id in the url so for example: `localhost/blogs/1` where 1 would be the id of the object.
+
+```jsx
+<Link to={`/objects/${object.id}`} ></Link>
+```
+To get specific data from the database you most likely have already run a get command to `get` all the data from the database first. Then with that data you can use the `id` of any object of choice to get all the data spicific to that id.
+
+<div id="hooks"></div>
+
+### Custom hooks
+Throughout our application we might want to make multiple `get` requests from different components. Right now we got one component that has a fucntion which makes a get request, if we got another component that wants to make a `get` request as well it need to have its own function, and make the same call. So this means were basically coding the same function in every component that we want to make a `get` request in. 
+
+It would be better if we got one function in a seperate file that makes a get request with any url as `input` and gives up the corresponding data as `output`. This way we can use call this function in any component anytime we want. This is called a `Custom Hook`
+
+We can use a custom hook in this example to make get requests anywhere in our application by simply calling: `usefetch()`
+
+```jsx
+import { useState, useEffect } from 'react';
+
+const useFetch = (url) => {
+
+    const [data, setData] = useState(null); // To store the data.
+    const [isPending, setIsPending] = useState(true); // To store whether the fetch fucntion is waiting for data.
+    const [error, setError] = useState(null); // To store the error message.
+
+
+    useEffect(() => { // activate every time this component is rendered. 
+        fetch(url) // Make a get request to the Json Data file.
+        .then(res =>  { // Check for response
+            return res.json(); // Return the json of that response
+        })
+        .then(data => { // If data is in that response.
+            setData(data); // Set data with the retrieved data.
+            setIsPending(false); // Set pending to false since the data is loaded.
+            setError(null); // Set error to null since there is no error.
+        })
+        .catch(err => { // If an error occurs then set then catch it.
+            setIsPending(false); // Set pending to false since there is an error that occured.
+            setError(err.message); // Set error with the message of that error.
+        })
+    }, [url]); 
+
+    return {data, isPending, error} // Return all the data into an object. 
+}
+ 
+export default useFetch;
+```
+Now with this file called `usefetch.jsx` we can import this in the component we want to it in and then simply call the function.
+```jsx
+// Here we import the useFetch() function from the file useFetch.jsx.
+import useFetch from "useFetch"; 
+
+// Then anywhere in our code before the Render() function we can call this function and set the variables that it returns.
+const {data, isPending, error} = useFetch('http://localhost:8000/blogs');
+```
 
 <div id="rename"></div>
 
 #### Renaming data
-coming soon...
+Whenever we use a custom hook to retrievw data from the database, we always get back an object with `data` in it. Its good practice to name your data so that we and other developers tht read our code know what kind of data it is that were requesting.
+We can rename data that we get from our custom hooks like this.
 
-<div id="hooks"></div>
-
-### Custom hooks 
-coming soon...
+```jsx
+// Here we rename the incoming data from our custom hook to be called 'blogs'
+const { data: blog, isPending, error } = useFetch('http://localhost:8000/blogs');
+```
 
