@@ -27,6 +27,7 @@
   - 4.6 [Using Axios instead of Fetch](#axios)
 - 5 [Custom Hooks](#hooks)
   - 5.1 [Renaming data](#rename)
+- 6 [React Hooks](#reacthooks)
 
 ---
 
@@ -626,4 +627,69 @@ const {
   isPending,
   error,
 } = useFetch("http://localhost:8000/blogs");
+```
+
+<div id="reacthooks"></div>
+
+### React hooks
+
+In this section im walking through the multiple hooks that reacts offers (The ones that i know how to use)
+
+#### UseContext
+
+The are a lot of ways to use `useContext()` but here im explaning probably the only one im gonna use in future projects.
+useContext is basically a way to make global variables. these are states or just data that we need in multiple components
+Im using a method where im using a seperate file for our global variables. The file will be called `ContextProvider.jsx` but you can call it anything you want.
+
+```jsx
+import { createContext, useContext, useState } from "react"; // We're importing the necessary hooks
+
+const StateContext = createContext(); // We'll create a contect variable
+
+/*  
+  Here we create a functiont that takes in all the "children" which are gonna be the components that are going to be 
+  able to use the variables that we define inside this function.
+*/
+
+export const StateContextProvider = ({ children }) => {
+  // Here we define the variable(s)
+  const [count, setCount] = useState();
+
+  // Here we define a privider component with inside our variables and a placeholder for the children
+  return (
+    <StateContext.Provider
+      value={{
+        count,
+        setCount,
+      }}
+    >
+      {children}
+    </StateContext.Provider>
+  );
+};
+
+export const useStateContext = () => useContext(StateContext);
+```
+
+After that we can now use a the `StateContextProvider` function as a component and put all the components in we want.
+First we import the the `StateContextProvider` from the our `ContextProvider.jsx` file like this:
+
+```jsx
+import { StateContextProvider } from "./context/ContextProvider";
+```
+
+Then we can use the `StateContextProvider` tag
+
+```jsx
+<StateContextProvider>
+  <MyCustomComponent />
+</StateContextProvider>
+```
+
+And in between those tags we can put any component we want.
+Every component that you put in needs to import the the variables it wants to use like this.
+
+```jsx
+// MyCustomComponent.jsx
+const { count, setCount } = useStateContext();
 ```
