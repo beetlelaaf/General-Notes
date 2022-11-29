@@ -28,6 +28,7 @@
 - 5 [Custom Hooks](#hooks)
   - 5.1 [Renaming data](#rename)
 - 6 [React Hooks](#reacthooks)
+- 7 [React Index Import](#indeximport)
 
 ---
 
@@ -692,4 +693,36 @@ Every component that you put in needs to import the the variables it wants to us
 ```jsx
 // MyCustomComponent.jsx
 const { count, setCount } = useStateContext();
+```
+
+<div id="indeximport"></div>
+
+### Import Using an index.js file
+
+When your project becomes bigger you be left with a lot of components in different directories, and sometimes you want to import a lot of components or assets from different folders. But then you have to individually import everything you need at the top of your component and your code will become a mess.
+To fix a problem like this, we can add an index.js file to a particular folder and import all the assets and/or components in there and then export them as names, like this:
+
+```js
+// Here we import 5 svg icons and set them as React Component.
+import { ReactComponent as CalculationIcon } from "./CalculationIcon.svg";
+import { ReactComponent as DropdownIcon } from "./DropdownIcon.svg";
+import { ReactComponent as NumberIcon } from "./NumberIcon.svg";
+import { ReactComponent as SwitchIcon } from "./SwitchIcon.svg";
+import { ReactComponent as TextIcon } from "./TextIcon.svg";
+
+// We then export them as simple names we can use anywhere in our project
+export { CalculationIcon, DropdownIcon, NumberIcon, SwitchIcon, TextIcon };
+```
+
+Then anywhere in our project we can import any asset/component we have defined from index.js.
+
+```js
+// Here we import all the icons from our index.js file
+import {
+  CalculationIcon,
+  DropdownIcon,
+  NumberIcon,
+  SwitchIcon,
+  TextIcon,
+} from "../../../assets/Index";
 ```
