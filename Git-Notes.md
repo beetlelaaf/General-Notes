@@ -96,6 +96,15 @@ If you experience any conflics while rebasing from main you can fix them inside 
 With conflicts you can either choose to keep the code thats already in main, or use the `incoming changes` the incoming changes are the changes you have made inside your branch.
 Usually you want to use the changes that were already inside main as one of the other developers might have changed them for their code to work. But it really depends on he situation so make sure you discuss this with a other developers that work on the same project as you.
 
+After you resolved the conflicts you need to stage the new changes.
+`git add .`
+
+Then you need to continue the rebase:
+`git rebase --continue`
+
+Finally you want to force push your changes to your feature brwanch so they can be merged with main.
+`git push --force origin feature-branch`
+
 #### Changing commits with rebase
 
 `git rebase -I HEAD~N`
