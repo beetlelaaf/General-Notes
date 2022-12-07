@@ -3,34 +3,59 @@
 > These notes will cover the basics and some advanced concepts of git.
 > These are one of the most frequetly used by me.
 
-### Staging Modified Files
+---
 
-`git add [file name]`
-Will stage modified files so the can be committed.
+### Table of contents
 
-`git add .`
-Adds all the modified files to the commit state (ready to commit)
+- 1 [Pushing changes to the respository](#start)
+  - 1.1 [Staging files](#staging)
+  - 1.2 [Unstaging files](#unstaging)
+  - 1.3 [Committing files](#committing)
+  - 1.4 [Pushing files](#pushing)
 
-### Unstaging files (Restore)
+---
 
-`git restore —gitstaged [file name]`
-Unstage staged files.
+<div id="start"></div>
 
-`git restore [filename]`
-Restore file changes (unstaged changes)
+### Pushing changes to the database
 
-### Commiting files
+If you modified, added or deleted a file, version control wil tell you that the files have changed compared to the remote repository.
+you can use `git status` to see which files changed compared to your repository. It will show you: modified, new (untracked) and deleted files.
 
-`git commit -m [message]`
-Commits the staged files to the commit state.Here you give it a message to indicate what you’re pushing to the repository.
+<div id="staging"></div>
 
-### Pushing files to the repository
+##### Staging files
 
-`git push`
-Pushes your commits to the repository on the current branch you’re in.
+If you want update those changes with the remote branch (Pushing) we first need to stage the changes. We can do that by using the following command: `git add .` which will add all the modified files to the commit state (ready to commit) but you can also use `git add [file name]` to stage specific files.
 
-`git push origin [branch name]`
-Pushes your commits to origin branch
+<div id="unstaging"></div>
+
+##### Unstage Files
+
+If you made a mistake while staging files you can unstage them by using `git restore --staged [filename]`
+Notice were using a keyword called `--staged` which is flag for what type of restore you want to do in this case we want to undo the previous git command.
+You can use other flags for example `--source` which will not only unstage your changes but will also go back to the last commited version.
+meaning that the changes that you made to the file will be lost.
+Lastly you can use the `--patch` flag which will allow you to restore individual chucks of a file you modifies.
+
+<div id="committing"></div>
+
+##### Committing files
+
+Once we have stage the right files we want to push to the repository then its timr to commit them. We can do that byusing the following command: `git commit -m <message>`. The `-m` is needed to add a message to your commit. `<message>` is the place where you write the name of your commit. Make sure the commit message describes exactly what you changed so that other developers know what you changed without having to check the changed themselves. using the option `-a` will commit all changed files but will not include untracked files. (Untracked files are newly created files)
+Using the `--amend` flag will will rewrite the very last commit you made and amend them with new changes.
+
+> only use `--amend` on commits that aren't pushed yet.
+
+<div id="pushing"></div>
+
+##### Pushing files to the repository
+
+Not that we have commited our changes its time to push them to the repository. We can push our commits to the repository with tis command: ~~`git push`~~ but this is bad practive as you're not specifiying which branch you want to push to and git will take the default branch which is the current working branch. unless you have a `tracking connection` set up with your branch. Its good practice to always specify which remote branch you want to push to like this `git push origin <branch>` this will now push your commit to the remote branch. `origin` refers to the remote branch here, and `<branch>` is the name of that remote branch.
+
+###### Pushing a new local branch
+
+If youre pushing a newly created local branch to the remote repository its useful to add the `-u` option to keep track It makes sure that a tracking connection between the local and the newly created remote branch is established. Now its actually fine to use `git push` without specifying the remote branch as git now knows where to push its changes by looking at the tracking information.
 
 ### Pulling changes form a branch
 
