@@ -54,6 +54,8 @@ Using the `--amend` flag will will rewrite the very last commit you made and ame
 
 Not that we have commited our changes its time to push them to the repository. We can push our commits to the repository with tis command: ~~`git push`~~ but this is bad practive as you're not specifiying which branch you want to push to and git will take the default branch which is the current working branch. unless you have a `tracking connection` set up with your branch. Its good practice to always specify which remote branch you want to push to like this `git push origin <branch>` this will now push your commit to the remote branch. `origin` refers to the remote branch here, and `<branch>` is the name of that remote branch.
 
+To delete a remote branch we can use the flag `--delete` this will delete the remote branch. `git push --delete origin <branch>`
+
 <div id="pushlocal"></div>
 
 #### Pushing a new local branch
