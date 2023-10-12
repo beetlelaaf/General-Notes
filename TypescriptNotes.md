@@ -12,3 +12,5 @@
 <div id="difference"></div>
 
 ### Difference between TS and JS
+
+Typscript is a superset of javascipt and allows you to do use a strict types, it supports modern features such as arrow function, let, const and a lot of extra features such as Generics, intefaces and tuples, etc.
