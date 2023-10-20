@@ -10,13 +10,14 @@
 - 2 [Setup](#setup)
   - 2.1[Compiling and watching a TS file](#compiling)
   - 2.3[Configuring public and src folders](#publicsrc)
-- 3[Strict types in Typescript](#stricttypes)
-  - 3.1[Union types](#union)
-  - 3.2[The use of dynamic types](#dynamic)
-- 4[Type checking](#typechecking)
-  - 4.1[Type checking with functions](#functions)
-  - 4.2[Type checking with array's](#arrays)
-  - 4.3[Type checking with objects](#objects)
+  - 2.4[Downleveling](#downleveling)
+  - 2.5[Strictness of typescript](#strictness)
+- 3[The use of dynamic types](#dynamic)
+- 4[Explicit types in typescript](#explicittypes)
+  - 4.1[Union types](#union)
+  - 4.2[Explicit typing with functions](#functions)
+  - 4.3[Explicit typing with array's](#arrays)
+  - 4.4[Explicit typing with objects](#objects)
   
 
 <div id="difference"></div>
@@ -54,18 +55,52 @@ Since were setting a root directory to point to our `src` folder, the compiler e
 
 Now we can use `tsc.cmd -w` and it will automatically watch only the src folder for changes in the `src` folder and compile them.
 
-<div id="stricttypes"></div>
+<div id="publicsrc"></div>
 
-### Strict types in Typescript
+### Downleveling
+By default when compiling TS to JS, typescript will target the lowest version of ES (ECMAScript 2013, ES3) which will turn some things like template strings like this:
+```ts
+`Hello ${person}, How are you?`;
+```
+And turn it into this: 
+```ts
+"Hello ".concat(person, ", How are you?"); 
+```
+Which you might not want, so if you want to target a higher version like ES5 or ES6 you can do that inside the config file of tsc, by setting `"target":` to `es2015` or higher.
 
-Because typescript is scrictly typed it means that typescript doesnt allow us to change variable types once they are defined.
+> Note that upgrading to a higher version might not be supported by every browser so keep that in mind.
+
+<div id="strictness"></div>
+
+### Strictness of typescript
+By default the stricness of typescript is set to the the maximum meaning it will check basically everything it can, you can however change that in the config file and set only certain things to be checked like for example: `noImplicitAny` or `strictNullChecks`.
+
+
+<div id="dynamic"></div>
+
+### The use fully dynamic types in Typescript
+Using special type `any` you can make a variable completely dynamic. This however takes away the concept of typescript using explicit typing is genrally not recommended.
+```ts
+let dynamic: any;
+```
+> The keyword `any` is generally used if you dont want a particular value to cause typechecking errors.
+
+<div id="explicittypes"></div>
+
+### Explicit types in Typescript
+
+Because typescript is scrictly typed it means that typescript doesnt allow us to change variable types once they are defined. By defining a variable explicitly you can prevent a value from ever changing types. This is different from setting a value directly as you dont explicity tell Typescript what type of value its going to be and you basically let Typescript figure it out himself.
 
 You can define a single type of variable by using the following code:
 ```ts
 let name: string;
 let age: number;
-let isRegisted: boolean;
+let isRegisted: boolean; 
 ```
+> Always use lowercase when defining `string`, `number` and `boolean`
+
+> Notice how Typescript doesnt use `float` and `int` seperatly but instead uses `number` to represent any number regardless if its a interger or float.
+
 With this you basically tell typscript you're variable is gonna be of a specific type. whenever you assign a value to this variable typscript can now check if the value matches with the variable type you defined.
 
 <div id="union"></div>
@@ -79,21 +114,9 @@ let unionId: string|number; // The '|' character is used
 let unionIds: string|number|boolean; // Multiple union characters can used
 ```
 
-<div id="dynamic"></div>
-
-### The use dynamic types in Typescript
-Using special type `any` you can make a variable completely dynamic. This however takes away the concept of typescript using explicit typing is genrally not recommended.
-```ts
-let dynamic: any;
-```
-
-<div id="typechecking"></div>
-
-### Type checking in Typescript
-
 <div id="functions"></div>
 
-### Type checking in functions
+### Explicit typing with functions
 
 Since typescript is a scrictly types language its necessary to ensure that every variable (also paramenters) are given a type. So to do that with functions you have to write parameters like this: 
 
@@ -106,13 +129,35 @@ Explicit typing like this allows us to type check while we're developing. If typ
 
 <div id="arrays"></div>
 
-### Type checking in functions array's
+### Explicit typing with array's
 
-To be added...
+Array's can also be explicitly typed in many different ways to define the most simple array we can use the follwing code
 
+```ts
+let numberArray: number[];
+```
+To define this variable as an empty array modify the line so it looks like this:
+
+```ts
+let numberArray: number[] = [];
+```
+Union types can also be used with arrays like this this will define an array that can accept both numbers and strings
+```ts
+let numberAndStringArray: (number|string)[];
+```
+You can also define you array to either be one of 2 or more different types of arrays.
+
+```ts
+let numberOrStringArray: (number[]|string[]);
+```
+
+You can even define a variable to be either an array or a single type like this:
+```ts
+let numberArrayorString: (number[]|string);
+```
 
 <div id="objects"></div>
 
-### Type checking in functions objects
+### Explicit typing with objects
 
 To be added...
