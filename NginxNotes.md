@@ -17,7 +17,7 @@ Nginx is a web server that can be used as a reverse proxy, load balancer, mail p
 ### Setting up Nginx with docker
 
 Open en new folder and inside the new folder run the command `docker pull nginx` to pull an image from the docker site.
-This will automatically create an image inside dockert that we can now run.
+This will automatically create an image inside docker that we can now run.
 
 To run the container use the following command: `docker run --name nginx-webserver -it --rm -d -p 8000:80 nginx`
 
@@ -30,6 +30,15 @@ To run the container use the following command: `docker run --name nginx-webserv
 `-d` Runs it as a deamon (background process)
 
 `-p` Defines the port of the server
+
+This will start a docker container that listens from port 80 and we can access the website by going to `localhost:8000`
+
+#### Checking the status of the server
+
+To check the status of the server you can check if it runs by going to `localhost:8000` or curl it in the temrinal by using `curl localhost:8000` or in powershell `curl https://localhost:8000`.
+
+
+
 
 
 
