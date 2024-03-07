@@ -91,8 +91,12 @@ services:
     volumes:
       - ./html/:/usr/share/nginx/html/
 ```
-Here we define the keyword `services:` this will be the place where all our services will be defined. then we name our first service by name `nginx:` but this can basically be any name. The `build:` keyword will be a list of instructions when the image is build. So in this case we want to refer to the `Dockerfile` we have set up where we defined our image that we want to use. To refer to where the `Dockerfile` is whe use the keyword `context:` and then define the directory where its in. In this case that is going to be the current working directory and that represented by a `.`. You can also make use of the `dockerfile:` keyword to explicitly define the path to a docker file.
+Here we define the keyword `services:` this will be the place where all our services will be defined. then we name our first service by name `nginx:` but this can basically be any name. The `build:` keyword will be a list of instructions when the image is build. So in this case we want to refer to the `Dockerfile` we have set up where we defined our image that we want to use. To refer to where the `Dockerfile` is whe use the keyword `context:` and then define the directory where its in. In this case that is going to be the current working directory and that represented by a `.`. You can also make use of the `dockerfile:` keyword to explicitely define the path to a docker file.
 
 With `ports:` we can define which ports we want to docker to expose so that we can reach it through localhost.
 
 With `volumes:` you can refer to data that can be used by the container. In this case we want to map 2 different directories, on of them being the path to the website that is on your local machine `/html/` and the other one being the default directory for nginx `/usr/share/nginx/html/` so we can use it to copy data form local to the container. 
+
+### Building and Running images with docker compose
+
+Now that we have set up our `Dockerfile` and `docker-compose.yaml` its time to build and run our images using those files
